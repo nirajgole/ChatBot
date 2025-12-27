@@ -8,7 +8,7 @@ import streamlit as st
 # load the document
 # This will attempt to load ALL files in the directory using the UnstructuredFileLoader
 loader = DirectoryLoader(
-    "./data/",
+    "../data/",  # Path to your data directory
     glob="**/*",  # Load all files in the data directory and subdirectories
     loader_cls=UnstructuredFileLoader,
     silent_errors=True,  # Recommended for mixed file types
@@ -51,8 +51,9 @@ def generate_answer(query: str, context: str) -> str:
     return response["message"]["content"]
 
 
-st.title("AZ900 RAG with Ollama and Chroma")
-user_query = st.text_input("Enter your question about AZ900:")
+st.title("PDF RAG with Ollama 🦙 and Chroma")
+st.subheader("Ask questions about your documents! 📄")
+user_query = st.text_input("Enter your question:")
 
 if user_query:
     with st.spinner("Generating answer..."):

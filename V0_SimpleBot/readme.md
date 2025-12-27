@@ -1,7 +1,8 @@
+0. Used python <b>3.11</b> [2025-12-26]
 1. `Get-Command python`
 2. `Get-Command pip`
 3. Get all installed versions of python: `py -0`
-4. `py3.11 -m venv venv`
+4. `py -3.11 -m venv .venv`
 5. `venv/Scripts/activate`
 6. `pip cache purge`
 7. `python -m pip install pip --upgrade`
