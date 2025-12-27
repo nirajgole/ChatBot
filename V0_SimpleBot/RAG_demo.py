@@ -1,4 +1,4 @@
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import DirectoryLoader, UnstructuredFileLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
@@ -6,11 +6,20 @@ from ollama import chat
 import streamlit as st
 
 # load the document
-docs = PyPDFLoader("data/Big_O_Notes.pdf").load()
+# This will attempt to load ALL files in the directory using the UnstructuredFileLoader
+loader = DirectoryLoader(
+    "./data/",
+    glob="**/*",  # Load all files in the data directory and subdirectories
+    loader_cls=UnstructuredFileLoader,
+    silent_errors=True,  # Recommended for mixed file types
+)
+docs = loader.load()
+
+print(f"Loaded {len(docs)} documents.")
 
 # split the document into chunks
-#chunk_size should be greater than chunk_overlap
-splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=1500)
+# chunk_size should be greater than chunk_overlap
+splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=200)
 chunks = splitter.split_documents(docs)
 
 # create the embedding model
@@ -31,7 +40,7 @@ def generate_answer(query: str, context: str) -> str:
         messages=[
             {
                 "role": "user",
-                "content": "Answer the questions based on the provided context.\n\nContext:{context}",
+                "content": f"Answer the questions based on the provided context.\n\nContext:{context}",
             },
             {
                 "role": "user",
@@ -47,9 +56,9 @@ user_query = st.text_input("Enter your question about AZ900:")
 
 if user_query:
     with st.spinner("Generating answer..."):
-        context = retrieve(user_query)
+        cxt = retrieve(user_query)
 
     with st.spinner("Generating answer from context..."):
-        answer = generate_answer(user_query, context)
+        answer = generate_answer(user_query, cxt)
 
     st.write("**Answer:**", answer)
