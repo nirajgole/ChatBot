@@ -5,6 +5,14 @@ from langchain_chroma import Chroma
 from ollama import chat
 import streamlit as st
 
+
+# Model: gemma3:latest
+# Embedding: embeddinggemma
+
+# Model: llama3.2:latest
+# Embedding: llama3.2-embeddings
+
+
 # load the document
 # This will attempt to load ALL files in the directory using the UnstructuredFileLoader
 loader = DirectoryLoader(
@@ -19,11 +27,11 @@ print(f"Loaded {len(docs)} documents.")
 
 # split the document into chunks
 # chunk_size should be greater than chunk_overlap
-splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=200)
+splitter = RecursiveCharacterTextSplitter(chunk_size=2560, chunk_overlap=256)
 chunks = splitter.split_documents(docs)
 
 # create the embedding model
-embedding_model = OllamaEmbeddings(model="llama3.2:latest")
+embedding_model = OllamaEmbeddings(model="embeddinggemma")
 vector_store = Chroma.from_documents(
     chunks, embedding_model, persist_directory="chroma_db"
 )
@@ -31,12 +39,12 @@ vector_store = Chroma.from_documents(
 
 # retrieve the most relevant chunks from the vector store
 def retrieve(query: str) -> str:
-    return vector_store.similarity_search(query, k=3)
+    return vector_store.similarity_search(query, k=5)
 
 
 def generate_answer(query: str, context: str) -> str:
     response = chat(
-        model="llama3.2:latest",
+        model="gemma3:latest",
         messages=[
             {
                 "role": "user",
