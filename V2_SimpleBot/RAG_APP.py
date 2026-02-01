@@ -84,7 +84,7 @@ def get_weather(location: str) -> str:
 
 agent = create_agent(model, tools=[search, get_weather])
 
-# agent = create_tool_calling_agent(model, tools, prompt)
+agent = create_tool_calling_agent(model, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False)
 
 # --- STEP 4: RUN THE CHAT LOOP ---

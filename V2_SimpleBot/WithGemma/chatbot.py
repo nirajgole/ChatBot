@@ -24,7 +24,7 @@ def chatbot():
             if result.startswith("missing_fields"):
                 print("🤖 Bot: I need more information to help you.")
             else:
-                print("🤖 Bot: Sorry, I can’t help with that yet.")
+                print("🤖 Bot: Sorry, I can't help with that yet.")
             continue
 
         handler = ROUTES[result]
